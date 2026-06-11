@@ -7,177 +7,137 @@
 
 <style>
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  color:white;
-  background:url("https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80") center/cover fixed;
+    margin:0;
+    font-family:Arial,sans-serif;
+    color:white;
+    background:url("https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80") center/cover fixed;
 }
 
-/* dark overlay */
 body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.75);
-  z-index:-1;
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    z-index:-1;
 }
 
-/* header */
 header{
-  padding:15px;
-  text-align:center;
-  position:sticky;
-  top:0;
-  background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(10px);
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(10px);
+    padding:15px;
+    text-align:center;
+    position:sticky;
+    top:0;
 }
 
 h1{
-  margin:10px 0;
+    margin:10px;
 }
 
-/* search */
-input{
-  width:90%;
-  max-width:500px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  outline:none;
-  margin-top:10px;
+#search{
+    width:90%;
+    max-width:500px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
 }
 
-/* categories */
-#cats{
-  margin-top:10px;
-}
-
-button{
-  margin:5px;
-  padding:8px 12px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-/* grid */
 #games{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
-  gap:15px;
-  padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    padding:20px;
 }
 
-/* cards */
 .card{
-  background:rgba(0,0,0,0.6);
-  border-radius:12px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:0.2s;
+    background:rgba(0,0,0,.6);
+    border-radius:15px;
+    overflow:hidden;
+    text-decoration:none;
+    color:white;
+    transition:.2s;
 }
 
 .card:hover{
-  transform:scale(1.05);
+    transform:scale(1.05);
 }
 
 .card img{
-  width:100%;
-  height:100px;
-  object-fit:cover;
+    width:100%;
+    height:150px;
+    object-fit:cover;
 }
 
 .card p{
-  margin:10px;
-  text-align:center;
+    text-align:center;
+    padding:10px;
+    margin:0;
+    font-weight:bold;
 }
 
-/* fullscreen button */
 #fs{
-  position:fixed;
-  bottom:15px;
-  right:15px;
-  padding:10px 15px;
-  border:none;
-  border-radius:10px;
-  background:white;
-  color:black;
+    position:fixed;
+    right:15px;
+    bottom:15px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
 }
 </style>
 </head>
-
 <body>
 
 <header>
-  <h1>🎮 K1NJ GAMES 🎮</h1>
-
-  <input id="search" placeholder="Search games...">
-
-  <div id="cats">
-    <button onclick="filter('All')">All</button>
-    <button onclick="filter('Action')">Action</button>
-    <button onclick="filter('Racing')">Racing</button>
-    <button onclick="filter('Shooter')">Shooter</button>
-    <button onclick="filter('Puzzle')">Puzzle</button>
-    <button onclick="filter('Adventure')">Adventure</button>
-    <button onclick="filter('Sports')">Sports</button>
-  </div>
+    <h1>🎮 K1NJ GAMES 🎮</h1>
+    <input id="search" placeholder="Search games...">
 </header>
 
-<div id="games"></div>
+<div id="games">
+
+<a class="card" href="games/flip-bros/" target="_blank">
+    <img src="flip-bros.png">
+    <p>Flip Bros</p>
+</a>
+
+<a class="card" href="games/dye-hard/" target="_blank">
+    <img src="DyeHardTeaser.jpg">
+    <p>Dye Hard</p>
+</a>
+
+<a class="card" href="games/moto-x3m/" target="_blank">
+    <img src="moto-x3m-2.jpg">
+    <p>Moto X3M</p>
+</a>
+
+</div>
 
 <button id="fs" onclick="toggleFS()">⛶ Fullscreen</button>
 
 <script>
-// generate 200 games automatically
-let games = [];
-let cats = ["Action","Racing","Shooter","Puzzle","Adventure","Sports"];
+const search=document.getElementById("search");
 
-for(let i=1;i<=200;i++){
-  games.push({
-    name:"Game "+i,
-    cat:cats[i % cats.length],
-    img:"https://picsum.photos/300/200?random="+i
-  });
-}
+search.addEventListener("input",()=>{
+    let value=search.value.toLowerCase();
 
-function render(list){
-  let box = document.getElementById("games");
-  box.innerHTML="";
-  list.forEach(g=>{
-    box.innerHTML += `
-      <div class="card" data-cat="${g.cat}">
-        <img src="${g.img}">
-        <p>${g.name}</p>
-      </div>
-    `;
-  });
-}
+    document.querySelectorAll(".card").forEach(card=>{
+        let name=card.innerText.toLowerCase();
 
-render(games);
-
-// search
-document.getElementById("search").addEventListener("input", e=>{
-  let v = e.target.value.toLowerCase();
-  render(games.filter(g=>g.name.toLowerCase().includes(v)));
+        card.style.display=
+            name.includes(value)
+            ? "block"
+            : "none";
+    });
 });
 
-// filter
-function filter(c){
-  if(c==="All") return render(games);
-  render(games.filter(g=>g.cat===c));
-}
-
-// fullscreen
 function toggleFS(){
-  if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
+    if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen();
+    }else{
+        document.exitFullscreen();
+    }
 }
 </script>
 
 </body>
 </html>
-
